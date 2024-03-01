@@ -1,14 +1,12 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QCheckBox, QFrame
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QCheckBox, QFrame, QWidget
-from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-import sys
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt, QDateTime
+from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QCheckBox, QFrame, QWidget
 
 
 class BillingSoftware(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -21,27 +19,93 @@ class BillingSoftware(QMainWindow):
 
         self.setup_ui()
 
+    def save_receipt(self):
+        # Get data from the entries and other widgets
+        customer_name = self.customer_name_entry.text()
+        customer_phone = self.customer_phone_entry.text()
+        customer_email = self.customer_email_entry.text()
+
+        compressor_value = self.compressor_combo.currentText()
+        model_value = self.model_entry.text()
+        gas_value = self.gas_entry.text()
+        freezer_value = self.freezer_entry.text()  # Updated reference
+        condenser_value = self.condenser_entry.text()
+        filter_value = self.filter_entry.text()
+        evaporator_value = self.evaporator_entry.text()
+
+        # Create a string with the receipt information
+        receipt_info = f"Customer Name: {customer_name}\nCustomer Phone: {customer_phone}\nCustomer Email: {customer_email}\n" \
+            f"Compressor: {compressor_value}\nModel No: {model_value}\nGas Charge: {gas_value}\n" \
+            f"Freezer Work: {freezer_value}\nCondenser: {condenser_value}\n" \
+            f"Filter: {filter_value}\nEvaporator: {evaporator_value}"
+
+        # Save the receipt to a file with a timestamp in the filename
+        timestamp = QDateTime.currentDateTime().toString("yyyyMMdd_hhmmss")
+        filename = f"receipt_{timestamp}.txt"
+
+        try:
+            with open(filename, 'w') as file:
+                file.write(receipt_info)
+            QMessageBox.information(
+                self, "Save Success", f"Receipt saved successfully as {filename}")
+        except Exception as e:
+            QMessageBox.warning(
+                self, "Save Error", f"Error occurred while saving receipt: {str(e)}")
+
     def setup_ui(self):
         layout = QVBoxLayout()
         # Shop Name
         shop_name_label = QLabel("Mian Cooling Center")
-        font = QFont("Helvetica [Cronyx]", 16)
+        font = QFont("Helvetica [Cronyx]", 20)
         font.setBold(True)
         shop_name_label.setFont(font)
         self.central_layout.addWidget(
             shop_name_label, alignment=Qt.AlignCenter)
 
+        # self.central_layout.addSpacing(10)  # Adjust the value as needed
+
         # Contact Information
         contact_label = QLabel("Contact Information:", self)
-        contact_label.setFont(QFont("Helvetica [Cronyx]", 12))
-        contact_label.setUnderline(True)
+        contact_label.setStyleSheet("text-decoration: underline;")
         self.central_layout.addWidget(contact_label, alignment=Qt.AlignCenter)
 
-        phone_label = QLabel("Phone: +123 456 7890", self)
+        phone_label = QLabel("Phone: +92 300 123456", self)
         self.central_layout.addWidget(phone_label, alignment=Qt.AlignCenter)
 
-        email_label = QLabel("Email: info@miancoolingcenter.com", self)
+        email_label = QLabel("Email: mian_cooling@yahoo.com", self)
         self.central_layout.addWidget(email_label, alignment=Qt.AlignCenter)
+
+   # Customer Information Section
+        customer_layout = QVBoxLayout()
+        customer_label = QLabel("Customer Information:", self)
+        customer_label.setStyleSheet("text-decoration: underline;")
+        self.central_layout.addWidget(customer_label, alignment=Qt.AlignCenter)
+
+        customer_name_layout = QHBoxLayout()
+        customer_name_label = QLabel("Name:", self)
+        self.customer_name_entry = QLineEdit(self)
+
+        customer_name_layout.addWidget(customer_name_label)
+        customer_name_layout.addWidget(self.customer_name_entry)
+        customer_layout.addLayout(customer_name_layout)
+
+        customer_phone_layout = QHBoxLayout()
+        customer_phone_label = QLabel("Phone:", self)
+        self.customer_phone_entry = QLineEdit(self)
+
+        customer_phone_layout.addWidget(customer_phone_label)
+        customer_phone_layout.addWidget(self.customer_phone_entry)
+        customer_layout.addLayout(customer_phone_layout)
+
+        customer_email_layout = QHBoxLayout()
+        customer_email_label = QLabel("Email:", self)
+        self.customer_email_entry = QLineEdit(self)
+
+        customer_email_layout.addWidget(customer_email_label)
+        customer_email_layout.addWidget(self.customer_email_entry)
+        customer_layout.addLayout(customer_email_layout)
+
+        self.central_layout.addLayout(customer_layout)
 
         # Separator Line
         separator_line = QFrame(self)
@@ -82,10 +146,10 @@ class BillingSoftware(QMainWindow):
         # Freezer Section
         freezer_layout = QHBoxLayout()
         freezer_label = QLabel("Freezer Work:", self)
-        self.freezer_checkbox = QCheckBox("Include Freezer Work", self)
+        self.freezer_entry = QLineEdit(self)
 
         freezer_layout.addWidget(freezer_label)
-        freezer_layout.addWidget(self.freezer_checkbox)
+        freezer_layout.addWidget(self.freezer_entry)
         self.central_layout.addLayout(freezer_layout)
 
         # Condenser Section
@@ -122,6 +186,13 @@ class BillingSoftware(QMainWindow):
         calculate_button.clicked.connect(self.calculate_total)
         self.central_layout.addWidget(
             calculate_button, alignment=Qt.AlignCenter)
+
+        # Button to Save Receipt
+        save_button = QPushButton("Save Receipt", self)
+        save_button.setStyleSheet(
+            "background-color: #3498db; color: white;")
+        save_button.clicked.connect(self.save_receipt)
+        self.central_layout.addWidget(save_button, alignment=Qt.AlignCenter)
 
     def calculate_total(self):
         # Add your logic for calculating the total amount based on selected options
