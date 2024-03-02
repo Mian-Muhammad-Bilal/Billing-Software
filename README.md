@@ -1,5 +1,3 @@
-# Billing-Software
-A billing software for Cooling center(Repairing shop)
 # Billing Software
 
 The **Billing Software** is a PyQt5-based graphical user interface (GUI) application designed for managing billing transactions in a cooling center.
