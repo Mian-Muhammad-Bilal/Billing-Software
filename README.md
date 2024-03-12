@@ -10,7 +10,6 @@ The **Billing Software** is a PyQt5-based graphical user interface (GUI) applica
   - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -35,7 +34,7 @@ These instructions will help you get a copy of the project up and running on you
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/billing-software.git
+    git clone https://github.com/Mian-Muhammad-Bilal/billing-software.git
     ```
 
 2. **Install the required dependencies:**
@@ -60,8 +59,4 @@ These instructions will help you get a copy of the project up and running on you
 
 ## Contributing
 
-Feel free to contribute by [forking the repository](https://github.com/yourusername/billing-software/fork), creating pull requests, or opening issues.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+Feel free to contribute by [forking the repository](https://github.com/Mian-Muhammad-Bilal/billing-software/fork), creating pull requests, or opening issues.
